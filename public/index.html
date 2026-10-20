@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<!-- =========================================================================
+     AI 人生教练 · 前端页面 (index.html)
+     -------------------------------------------------------------------------
+     页面结构（从上到下）：
+       1. <header>  顶部标题栏：品牌标识 + "清空对话" 按钮
+       2. <main>    对话主区域：欢迎屏（含引导问题）+ 消息列表
+       3. <footer>  输入区：多行输入框 + 发送/停止按钮 + 使用提示
+     说明：CSS 与 JS 分别位于 styles.css 与 app.js，便于维护。
+     ========================================================================= -->
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <!-- 视口设置，保证在手机等小屏设备上正常缩放 -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="AI 人生教练：通过与 AI 对话获得成长建议" />
+  <title>AI 人生教练 · Life Coach</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <!-- 整个应用的最外层容器，采用纵向 Flex 布局铺满视口 -->
+  <div class="app">
+
+    <!-- ============ 区域 1：顶部标题栏 ============ -->
+    <header class="app-header">
+      <div class="brand">
+        <!-- 品牌图标：使用内联 SVG，避免额外图片请求 -->
+        <div class="brand-logo" aria-hidden="true">
+          <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor"
+               stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 21s-6.5-4.35-9-8.5C1.3 9.7 2.6 6 6 6c2 0 3.2 1.2 4 2.2C10.8 7.2 12 6 14 6c3.4 0 4.7 3.7 3 6.5-2.5 4.15-9 8.5-9 8.5z" />
+          </svg>
+        </div>
+        <div class="brand-text">
+          <h1>AI 人生教练</h1>
+          <p>倾听 · 引导 · 陪你一起成长</p>
+        </div>
+      </div>
+      <!-- 清空当前对话（同时会清除上下文记忆） -->
+      <button id="clearBtn" class="btn-ghost" type="button">清空对话</button>
+    </header>
+
+    <!-- ============ 区域 2：对话主区域 ============ -->
+    <main id="chatArea" class="chat-area">
+      <!-- 欢迎屏：首次进入或清空对话后显示 -->
+      <section id="welcome" class="welcome">
+        <div class="welcome-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" width="40" height="40" fill="none" stroke="currentColor"
+               stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="9" />
+            <path d="M12 7v5l3 2" />
+          </svg>
+        </div>
+        <h2>你好，我是你的 AI 人生教练</h2>
+        <p class="welcome-desc">
+          无论你正被情绪困扰、对未来感到迷茫，还是想变得更好一点点，<br />
+          都可以在这里和我聊聊。先从下面的话题开始，或直接说出你的想法。
+        </p>
+        <!-- 引导问题：点击即可自动填入并发送 -->
+        <div class="suggestions">
+          <button class="suggestion" type="button" data-prompt="我最近总是拖延，怎么才能提高行动力？">我最近总是拖延，怎么才能提高行动力？</button>
+          <button class="suggestion" type="button" data-prompt="帮我制定一个未来三个月的个人成长计划。">帮我制定一个未来三个月的个人成长计划</button>
+          <button class="suggestion" type="button" data-prompt="我经常感到焦虑，有什么方法可以缓解？">我经常感到焦虑，有什么方法可以缓解？</button>
+          <button class="suggestion" type="button" data-prompt="怎样才能找到自己真正热爱的事情？">怎样才能找到自己真正热爱的事情？</button>
+        </div>
+      </section>
+
+      <!-- 消息列表：动态插入用户与 AI 的气泡 -->
+      <div id="messages" class="messages" aria-live="polite"></div>
+    </main>
+
+    <!-- ============ 区域 3：底部输入区 ============ -->
+    <footer class="composer">
+      <form id="composerForm" class="composer-inner" autocomplete="off">
+        <textarea id="input" class="input" rows="1"
+                  placeholder="说说你此刻的想法…（Enter 发送，Shift + Enter 换行）"
+                  aria-label="输入你的想法"></textarea>
+        <!-- 发送按钮：生成过程中会变为"停止"。用 type="button"，
+             改由 JS 统一处理点击，避免触发表单原生提交 -->
+        <button id="sendBtn" class="btn-send" type="button" aria-label="发送">
+          <svg class="icon-send" viewBox="0 0 24 24" width="20" height="20" fill="none"
+               stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M22 2 11 13" />
+            <path d="M22 2 15 22 11 13 2 9z" />
+          </svg>
+          <svg class="icon-stop" viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+            <rect x="6" y="6" width="12" height="12" rx="2" />
+          </svg>
+        </button>
+      </form>
+      <p class="hint">内容由 AI 生成，仅供参考；如遇严重心理困扰，请及时寻求专业帮助。</p>
+    </footer>
+
+  </div>
+
+  <!-- 前端主逻辑 -->
+  <script src="app.js"></script>
+</body>
+</html>
